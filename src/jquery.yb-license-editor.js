@@ -2,7 +2,6 @@
 
     "use strict";
 
-    // Create the defaults once
     var pluginName = "ybLicenseEditor",
         defaults = {
             defaultLicense: {
@@ -28,10 +27,21 @@
 
     $.extend( YbLicenseEditor.prototype, {
         init: function() {
-            $(this.element).css('display', 'none');
+            $(this.element).hide();
+
             this.$container = $(this.element.parentNode);
             this.$licenseLabel = $(licenseLabelTpl);
             this.$container.append(this.$licenseLabel);
+
+            this.$licensePicker = $(licensePickerTpl);
+            $('body').append(this.$licensePicker);
+
+            var self = this;
+
+            this.$licenseLabel.on('click', '.yb-edit-btn button', function(){
+                self.showLicensePicker();
+            });
+
             this.updateLicenseLabel();
         },
         updateLicenseLabel: function() {
@@ -62,11 +72,13 @@
             }else{
                 $label.addClass('cm');
             }
+        },
+        showLicensePicker: function() {
+            $('body').addClass('no-scroll');
+            this.$licensePicker.show();
         }
-    } );
+    });
 
-    // A really lightweight plugin wrapper around the constructor,
-    // preventing against multiple instantiations
     $.fn[ pluginName ] = function( options ) {
         return this.each( function() {
             if ( !$.data( this, "plugin_" + pluginName ) ) {
@@ -98,6 +110,98 @@
                 '</div>' +
             '</div>' +
         '</div>';
-    var licenseEditorTpl = '';
+
+    var licensePickerTpl =
+        '<div class="yb-license-picker">' +
+            '<div class="yb-picker-modal">' +
+                '<div class="yb-title">编辑转载授权协议</div>' +
+                '<div class="yb-content">' +
+                    '<div class="license-type">' +
+                        '<div class="description">1. 请选择转载许可协议:</div>' +
+                        '<div class="options">' +
+                            '<div class="option cc">' +
+                                '<div class="icon"></div>' +
+                                '<label>' +
+                                    '<input type="radio" />' +
+                                    '知识共享许可协议' +
+                                '</label>' +
+                                '<div class="triangle"></div>' +
+                            '</div>' +
+                            '<div class="option cm">' +
+                                '<div class="icon"></div>' +
+                                '<label>' +
+                                    '<input type="radio" />' +
+                                    '商业许可协议' +
+                                '</label>' +
+                                '<div class="triangle"></div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="license-detail">' +
+                        '<div class="cc-adaptation license-item">' +
+                            '<div class="description">2. 是否允许你的作品被改编:</div>' +
+                            '<div class="question n3">' +
+                                '<label>' +
+                                    '<input type="radio" ng-model="license.cc.adaptation"/>' +
+                                    '是' +
+                                '</label>' +
+                                '<label>' +
+                                    '<input type="radio" ng-model="license.cc.adaptation"/>' +
+                                    '否' +
+                                '</label>' +
+                                '<label>' +
+                                    '<input type="radio" ng-model="license.cc.adaptation"/>' +
+                                    '是，只要他人以相同方式共享' +
+                                '</label>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="cc-commercial license-item">' +
+                            '<div class="description">3. 是否允许商业使用:</div>' +
+                            '<div class="question n2">' +
+                                '<label>' +
+                                    '<input type="radio" ng-model="license.cc.commercial"/>' +
+                                    '是' +
+                                '</label>' +
+                                '<label>' +
+                                    '<input type="radio" ng-model="license.cc.commercial"/>' +
+                                    '否' +
+                                '</label>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="cm-adaptation license-item">' +
+                            '<div class="description">2. 是否允许你的作品被改编:</div>' +
+                            '<div class="question n2">' +
+                                '<label>' +
+                                    '<input type="radio" />' +
+                                    '是' +
+                                '</label>' +
+                                '<label>' +
+                                    '<input type="radio" />' +
+                                    '否' +
+                                '</label>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="cm-fee license-item">' +
+                            '<div class="description">3. 设置转载价格:</div>' +
+                            '<div class="question">' +
+                                '<div class="price-tag-wrapper">' +
+                                    '<div class="price-tag" >10元</div>' +
+                                    '<div class="price-tag" >50元</div>' +
+                                    '<div class="price-tag" >100元</div>' +
+                                    '<div class="price-tag" >500元</div>' +
+                                    '<div class="price-tag custom" >' +
+                                        '<input type="text" size="10" placeholder="自定义金额"/>' +
+                                        '<div class="text">元</div>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="cc-license-preview">' +
+                        '<div class="name">您选择的转载许可协议：</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
 
 } )( jQuery, window, document );
