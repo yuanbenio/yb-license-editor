@@ -1,0 +1,110 @@
+.yb-license-editor {
+    font-family: 'PingFang SC', 'HanHei SC', 'Microsoft YaHei', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
+    font-size: 13px;
+}
+.yb-license-introduction
+{
+    color: #9b9b9b;
+}
+.yb-license-introduction a {
+    text-decoration: none;
+    color: #9b9b9b;
+}
+.yb-license-introduction a:hover {
+    color: #1c8c79;
+}
+.yb-license-label {
+    margin-top: 6px;
+}
+.yb-label-name {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: top;
+    color: #7b7b7b;
+}
+.yb-license {
+    display: block;
+    height: 30px;
+    line-height: 30px;
+}
+.yb-icons {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+}
+.yb-icons .yb-icon {
+    display: inline-block;
+    width: 16px;
+    height: 30px;
+    margin: 0 2px;
+    background: center no-repeat;
+}
+.yb-price {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    color: #2b2b2b;
+    vertical-align: top;
+}
+.yb-edit-btn {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: top;
+    margin-left: 12px;
+    padding-top: 3px;
+}
+.yb-edit-btn button {
+    display: block;
+    width: 80px;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
+    color: #7b7b7b;
+    outline: none;
+    font-size: 12px;
+    cursor: pointer;
+}
+.yb-edit-btn button:hover {
+    background-color: #f0f0f0;
+}
+.yb-edit-btn button:active {
+    background-color: #e0e0e0;
+}
+
+.yb-license-label.cc .yb-license.cm,
+.yb-license-label.cm .yb-license.cc {
+    display: none;
+}
+
+.yb-license.cc.nd .yb-icon.nd,
+.yb-license.cc.nc .yb-icon.nc,
+.yb-license.cc.sa .yb-icon.sa {
+    display: inline-block;
+}
+
+.yb-icon.cc {
+    background-image: url('images/cc/cc.svg');
+}
+.yb-icon.by {
+    background-image: url('images/cc/by.svg');
+}
+.yb-icon.nd {
+    background-image: url('images/cc/nd.svg');
+    display: none;
+}
+.yb-icon.nc {
+    background-image: url('images/cc/nc.svg');
+    display: none;
+}
+.yb-icon.sa {
+    background-image: url('images/cc/sa.svg');
+    display: none;
+}
+.yb-icon.cm {
+    background-image: url('images/cm.svg');
+}

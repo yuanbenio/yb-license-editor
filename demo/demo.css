@@ -20,6 +20,7 @@ input, textarea {
     outline: none;
     resize: none;
     padding: 6px;
+    font-size: 14px;
 
     border: 1px solid #cccccc;
 }
@@ -68,6 +69,8 @@ textarea:focus {
 
     color: #ffffff;
     background-color: #1c8c79;
+
+    font-size: 14px;
 }
 
 .submit .btn-submit:hover {
