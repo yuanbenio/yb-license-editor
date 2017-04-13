@@ -1,0 +1,3 @@
+$(function(){
+    $('#license-editor').ybLicenseEditor({});
+});
