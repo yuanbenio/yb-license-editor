@@ -335,7 +335,7 @@
 .yb-license-picker.cc.sa .license-preview .license.cc .details .sa,
 .yb-license-picker.cm.ad .license-preview .license.cm .details .ad,
 .yb-license-picker.cm.nd .license-preview .license.cm .details .nd {
-    display: block;
+    display: list-item;
 }
 
 .yb-license-picker .license-preview .license.cc .license-link {
