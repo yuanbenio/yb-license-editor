@@ -42,13 +42,19 @@
     height: 30px;
     margin: 0 2px;
     background: center no-repeat;
+    background-size: 16px 16px;
+}
+
+.yb-icons.large .yb-icon {
+    width: 24px;
+    background-size: 24px 24px;
 }
 .yb-price {
     display: inline-block;
     height: 30px;
     line-height: 30px;
-    font-size: 14px;
-    color: #2b2b2b;
+    font-size: 13px;
+    color: #787878;
     vertical-align: top;
 }
 .yb-edit-btn {
@@ -79,18 +85,6 @@
     background-color: #e0e0e0;
 }
 
-.yb-license-label.cc .yb-license.cm,
-.yb-license-label.cm .yb-license.cc {
-    display: none;
-}
-
-.yb-license.cc.nd .yb-icon.nd,
-.yb-license.cc.nc .yb-icon.nc,
-.yb-license.cc.sa .yb-icon.sa {
-    display: inline-block;
-}
-
-
 /* ============ License Picker =========== */
 
 .yb-license-picker {
@@ -104,23 +98,42 @@
 
     font-family: 'PingFang SC', 'HanHei SC', 'Microsoft YaHei', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
     font-size: 13px;
+    box-sizing: border-box;
+}
+.yb-license-picker * {
+    box-sizing: border-box;
 }
 .yb-license-picker .yb-picker-modal {
     position: absolute;
-    width: 600px;
-    height: 600px;
+    width: 540px;
+    height: 640px;
     left: 50%;
     top: 50%;
-    margin-left: -300px;
-    margin-top: -320px;
+    margin-left: -270px;
+    margin-top: -290px;
+    border-radius: 3px;
 
     background-color: #ffffff;
 }
 .yb-picker-modal .yb-title {
-    padding: 12px;
     border-bottom: 1px solid #f0f0f0;
-    font-size: 14px;
-    color: #7b7b7b;
+    height: 20px;
+    background-color: #f0f0f0;
+}
+.yb-picker-modal .yb-title .close {
+    position: absolute;
+    width: 30px;
+    height: 20px;
+    line-height: 20px;
+    right: 0;
+    top: 0;
+    font-size: 18px;
+    color: #cccccc;
+    text-align: center;
+    cursor: pointer;
+}
+.yb-picker-modal .yb-title .close:hover {
+    color: #9b9b9b;
 }
 .yb-picker-modal .license-type {
     padding: 20px 18px 0 18px;
@@ -134,15 +147,16 @@
 
 .license-detail .question {
     position: relative;
-    margin-top: 25px;
+    margin-top: 12px;
 }
 .license-detail .question label {
     margin-right: 100px;
     cursor: pointer;
 }
 
-.license-detail .license-item:not(:first-child) {
-    margin-top: 52px;
+.license-detail .license-item.cc-commercial,
+.license-detail .license-item.cm-fee {
+    margin-top: 32px;
 }
 
 .yb-picker-modal .description {
@@ -165,8 +179,19 @@
 
 .yb-picker-modal .options .option .icon {
     position: relative;
+    width: 64px;
+    margin: 0 auto;
     height: 64px;
     cursor: pointer;
+    background: center no-repeat;
+    background-size: 64px 64px;
+    opacity: 0.3;
+}
+.yb-picker-modal .options .option.cc .icon {
+    background-image: url('images/cc/cc.svg');
+}
+.yb-picker-modal .options .option.cm .icon {
+    background-image: url('images/cm.svg');
 }
 .yb-picker-modal .options .option label {
     display: block;
@@ -180,7 +205,7 @@
     display: none;
     width: 15px;
     height: 15px;
-    bottom: -11px;
+    bottom: -10px;
     left: 50%;
     margin-left: -7px;
     border-left: 1px solid #cfcfcf;
@@ -189,15 +214,15 @@
 
     transform: rotate(45deg);
 }
-.yb-picker-modal .options .option.active .triangle {
-    display: block;
+.yb-picker-modal .price-tag-wrapper {
+    position: relative;
+    overflow: auto;
 }
-
 .yb-picker-modal .price-tag {
     position: relative;
-    width: 110px;
-    height: 44px;
-    line-height: 44px;
+    width: 70px;
+    height: 32px;
+    line-height: 32px;
     margin-right: 8px;
     text-align: center;
     float: left;
@@ -211,6 +236,14 @@
     background-color: #1c8c79;
     color: #ffffff;
 }
+.yb-picker-modal .price-tag.custom {
+    width: 90px;
+}
+
+.yb-picker-modal .price-tag.error,
+.yb-picker-modal .price-tag.active.error {
+    background-color: #f45357;
+}
 
 .yb-picker-modal .price-tag input {
     display: block;
@@ -220,23 +253,143 @@
     padding: 0;
     font-size: 12px;
     color: #2b2b2b;
-    height: 40px;
-    line-height: 40px;
+    height: 28px;
+    line-height: 28px;
     text-align: center;
-    width: 80px;
+    width: 66px;
     top: 2px;
     left: 2px;
 }
 
 .yb-picker-modal .price-tag .text {
     position: relative;
-    margin-left: 83px;
+    margin-left: 66px;
 }
 
+.yb-picker-modal label input[type="radio"] {
+    margin-right: 6px;
+}
 
-    /* ============ Common =========== */
+.yb-license-picker.cc .option.cc .icon,
+.yb-license-picker.cm .option.cm .icon
+{
+    opacity: 0.7;
+}
 
-body.no-scroll {
+.yb-license-picker.cc .option.cc .triangle,
+.yb-license-picker.cm .option.cm .triangle
+{
+    display: block;
+}
+
+.yb-license-picker.cc .license-item.cm-adaptation,
+.yb-license-picker.cc .license-item.cm-fee,
+.yb-license-picker.cm .license-item.cc-adaptation,
+.yb-license-picker.cm .license-item.cc-commercial
+{
+    display: none;
+}
+
+.yb-license-picker .license-preview {
+    padding: 20px 18px;
+}
+
+.yb-license-picker .license-preview .text {
+    color: #787878;
+    font-size: 13px;
+}
+.yb-license-picker .license-preview .license-preview-content {
+    padding-top: 6px;
+}
+.yb-license-picker .license-preview .text .license-link {
+    color:  #1c8c79;
+    text-decoration: underline;
+}
+
+.yb-license-picker .license-preview .text .details {
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.yb-license-picker .license-preview .text .details li {
+    line-height: 1.5;
+}
+
+.yb-license-picker.cc .license-preview .license.cm,
+.yb-license-picker.cm .license-preview .license.cc {
+    display: none;
+}
+
+.yb-license-picker .license-preview .license.cc .details .nc,
+.yb-license-picker .license-preview .license.cc .details .nd,
+.yb-license-picker .license-preview .license.cc .details .sa,
+.yb-license-picker .license-preview .license.cm .details .nd,
+.yb-license-picker .license-preview .license.cm .details .ad,
+.yb-license-picker.cc.sa .license-preview .license.cc .details .ad,
+.yb-license-picker.cc.nc .license-preview .license.cc .details .ac,
+.yb-license-picker.cc.nd .license-preview .license.cc .details .ad {
+    display: none;
+}
+
+.yb-license-picker.cc.nc .license-preview .license.cc .details .nc,
+.yb-license-picker.cc.sa .license-preview .license.cc .details .sa,
+.yb-license-picker.cm.ad .license-preview .license.cm .details .ad,
+.yb-license-picker.cm.nd .license-preview .license.cm .details .nd {
+    display: block;
+}
+
+.yb-license-picker .license-preview .license.cc .license-link {
+    display: none;
+}
+
+.yb-license-picker.cc.sa.nc .license-link.sa.nc,
+.yb-license-picker.cc.sa.ac .license-link.sa.ac,
+.yb-license-picker.cc.nd.nc .license-link.nd.nc,
+.yb-license-picker.cc.nd.ac .license-link.nd.ac,
+.yb-license-picker.cc.ad.nc .license-link.ad.nc,
+.yb-license-picker.cc.ad.ac .license-link.ad.ac {
+    display: inline;
+}
+
+.yb-picker-modal .submit-btn {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    bottom: 12px;
+    right: 18px;
+}
+
+.yb-picker-modal .submit-btn button {
+
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    padding: 0;
+    border: 1px solid;
+    cursor: pointer;
+    border-radius: 3px;
+
+    color: #ffffff;
+    border-color: #1c8c79;
+    background-color: #1c8c79;
+
+    font-size: 14px;
+    outline: none;
+}
+.yb-picker-modal .submit-btn button:hover {
+    background-color: #006f59;
+}
+.yb-picker-modal .submit-btn button:active {
+    background-color: #005f49;
+}
+
+/* ============ Common =========== */
+
+body.yb-no-scroll {
     overflow: hidden;
 }
 
@@ -260,4 +413,15 @@ body.no-scroll {
 }
 .yb-icon.cm {
     background-image: url('images/cm.svg');
+}
+
+.cc .yb-license.cm,
+.cm .yb-license.cc {
+    display: none;
+}
+
+.cc.nd .yb-icon.nd,
+.cc.nc .yb-icon.nc,
+.cc.sa .yb-icon.sa {
+    display: inline-block;
 }

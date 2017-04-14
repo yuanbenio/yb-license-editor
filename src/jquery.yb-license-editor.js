@@ -20,29 +20,96 @@
         this._defaults = defaults;
         this._name = pluginName;
 
-        this.license = this.settings['defaultLicense'];
-
         this.init();
     }
 
     $.extend( YbLicenseEditor.prototype, {
         init: function() {
-            $(this.element).hide();
 
+            this.license = this.settings['defaultLicense'];
+
+            this.$input = $(this.element);
+            this.$input.hide();
+
+            this.initLicenseLabel();
+            this.initLicensePicker();
+
+            this.updateLicenseLabel();
+        },
+        initLicenseLabel: function() {
             this.$container = $(this.element.parentNode);
             this.$licenseLabel = $(licenseLabelTpl);
             this.$container.append(this.$licenseLabel);
 
+            var self = this;
+            this.$licenseLabel.on('click', '.yb-edit-btn button', function(){
+                self.showLicensePicker();
+            });
+        },
+        initLicensePicker: function() {
             this.$licensePicker = $(licensePickerTpl);
             $('body').append(this.$licensePicker);
 
             var self = this;
-
-            this.$licenseLabel.on('click', '.yb-edit-btn button', function(){
-                self.showLicensePicker();
+            this.$licensePicker.on('click', '.close', function(){
+                self.hideLicensePicker();
             });
 
-            this.updateLicenseLabel();
+            this.$licensePicker.on('click', '.license-type .option.cc', function() {
+                self.changeLicenseType('cc');
+            });
+            this.$licensePicker.on('click', '.license-type .option.cm', function() {
+                self.changeLicenseType('cm');
+            });
+
+            this.$licensePicker.on('click', '.license-detail .cc-adaptation input, .license-detail .cm-adaptation input', function() {
+                self.licensePickerLicense.content.adaptation = $(this).val();
+                self.updateLicensePicker();
+            });
+
+            this.$licensePicker.on('click', '.license-detail .cc-commercial input', function(){
+                self.licensePickerLicense.content.commercial = $(this).val();
+                self.updateLicensePicker();
+            });
+
+            this.$licensePicker.on('click', '.license-detail .cm-fee .price-tag', function(){
+
+                if(!$(this).hasClass('custom'))
+                {
+                    self.licensePickerLicense.content.price = $(this).attr('data-fee');
+                }else{
+
+                    if(!$(this).hasClass('active'))
+                    {
+                        self.licensePickerLicense.content.price = '';
+                    }
+                }
+                self.updateLicensePicker();
+            });
+
+            this.$licensePicker.on('change', '.license-detail .cm-fee .price-tag.custom input', function(){
+                var price = $(this).val();
+
+                self.$licensePicker.find('.license-detail .cm-fee .price-tag.custom').removeClass('error');
+
+                if(price === '' || parseFloat(price) + '' === price)
+                {
+                    self.licensePickerLicense.content.price = price;
+                    self.updateLicensePicker();
+                }
+            });
+
+            this.$licensePicker.on('click', '.submit-btn button', function(){
+                if(self.licensePickerLicense.type === 'cm' && self.licensePickerLicense.content.price === '')
+                {
+                    self.$licensePicker.find('.license-detail .cm-fee .price-tag.custom').addClass('error');
+                    return;
+                }
+
+                self.license = self.licensePickerLicense;
+                self.updateLicenseLabel();
+                self.hideLicensePicker();
+            });
         },
         updateLicenseLabel: function() {
 
@@ -71,11 +138,118 @@
 
             }else{
                 $label.addClass('cm');
+                $label.find('.yb-price .yb-number').text(this.license.content.price);
             }
+
+            this.$input.val(JSON.stringify(this.license));
         },
         showLicensePicker: function() {
-            $('body').addClass('no-scroll');
+
+            this.licensePickerLicense = $.extend(true, {}, this.license);
+            this.updateLicensePicker();
+
+            $('body').addClass('yb-no-scroll');
             this.$licensePicker.show();
+        },
+        hideLicensePicker: function() {
+            this.$licensePicker.hide();
+            $('body').removeClass('yb-no-scroll');
+        },
+        updateLicensePicker: function() {
+
+            var $picker = this.$licensePicker;
+
+            $picker
+                .removeClass('cm')
+                .removeClass('cc')
+                .removeClass('sa')
+                .removeClass('nd')
+                .removeClass('nc')
+                .removeClass('ad')
+                .removeClass('ac');
+
+            $picker.find('input[type="radio"]').prop('checked', false);
+
+            if(this.licensePickerLicense.type === 'cc')
+            {
+                $picker.addClass('cc');
+                $picker.find('.license-type .option.cc input').prop('checked', true);
+
+                $picker
+                    .find('.license-item.cc-adaptation input[value=' + this.licensePickerLicense.content.adaptation + ']')
+                    .prop('checked', true);
+
+                $picker
+                    .find('.license-item.cc-commercial input[value=' + this.licensePickerLicense.content.commercial + ']')
+                    .prop('checked', true);
+
+                if(this.licensePickerLicense.content.adaptation === 'sa')
+                {
+                    $picker.addClass('sa');
+                }else if(this.licensePickerLicense.content.adaptation === 'n') {
+                    $picker.addClass('nd');
+                }else{
+                    $picker.addClass('ad');
+                }
+
+                if(this.licensePickerLicense.content.commercial === 'n') {
+                    $picker.addClass('nc');
+                }else{
+                    $picker.addClass('ac');
+                }
+
+            }else{
+                $picker.find('.license-type .option.cm input').prop('checked', true);
+
+                $picker
+                    .find('.license-item.cm-adaptation input[value=' + this.licensePickerLicense.content.adaptation + ']')
+                    .prop('checked', true);
+
+                $picker.find('.price-tag').removeClass('active');
+
+                $picker.addClass('cm');
+
+                if(this.licensePickerLicense.content.adaptation === 'y')
+                {
+                    $picker.addClass('ad');
+                }else if(this.licensePickerLicense.content.adaptation === 'n') {
+                    $picker.addClass('nd');
+                }
+
+                var price = parseFloat(this.licensePickerLicense.content.price);
+
+                if(price === 10 || price === 50 || price === 100 || price === 500)
+                {
+                    $picker.find('.price-tag.t' + price).addClass('active');
+                    $picker.find('.price-tag.custom input').val('');
+                }else{
+                    $picker.find('.price-tag.custom').addClass('active');
+
+                    if(this.licensePickerLicense.content.price !== '')
+                    {
+                        $picker.find('.price-tag.custom input').val(price);
+                    }
+                }
+
+                $picker.find('.license-preview .yb-license.cm .yb-price .yb-number').text(this.licensePickerLicense.content.price);
+            }
+        },
+        changeLicenseType: function(type){
+            this.licensePickerLicense.type = type;
+            if(type === 'cc')
+            {
+                this.licensePickerLicense.content = {
+                    adaptation: 'sa',
+                    commercial: 'n'
+                };
+            }else{
+                this.licensePickerLicense.content = {
+                    adaptation: 'y',
+                    price: 10
+                };
+            }
+
+            this.updateLicensePicker();
         }
     });
 
@@ -91,7 +265,7 @@
         '<div class="yb-license-editor">' +
             '<div class="yb-license-introduction">本文将使用<a href="https://yuanben.io" target="_blank">「原本」</a>进行版权保护和转载监控</div>' +
             '<div class="yb-license-label">' +
-                '<div class="yb-label-name">授权转载协议：</div>' +
+                '<div class="yb-label-name">授权许可协议：</div>' +
                 '<div class="yb-icons">' +
                     '<div class="yb-license cc">' +
                         '<a href="javascript:void(0)" title="知识共享（CC）4.0协议" class="yb-icon cc"></a>' +
@@ -102,7 +276,7 @@
                     '</div>' +
                     '<div class="yb-license cm">' +
                         '<a href="javascript:void(0)" title="商业授权" class="yb-icon cm"></a>' +
-                        '<span class="yb-price">授权费用&nbsp;<span class="yb-number"></span></span>' +
+                        '<span class="yb-price">授权费用&nbsp;￥<span class="yb-number"></span></span>' +
                     '</div>' +
                 '</div>' +
                 '<div class="yb-edit-btn">' +
@@ -114,7 +288,9 @@
     var licensePickerTpl =
         '<div class="yb-license-picker">' +
             '<div class="yb-picker-modal">' +
-                '<div class="yb-title">编辑转载授权协议</div>' +
+                '<div class="yb-title">' +
+                    '<div class="close">×</div>' +
+                '</div>' +
                 '<div class="yb-content">' +
                     '<div class="license-type">' +
                         '<div class="description">1. 请选择转载许可协议:</div>' +
@@ -122,7 +298,7 @@
                             '<div class="option cc">' +
                                 '<div class="icon"></div>' +
                                 '<label>' +
-                                    '<input type="radio" />' +
+                                    '<input type="radio" name="license-type" value="cc" />' +
                                     '知识共享许可协议' +
                                 '</label>' +
                                 '<div class="triangle"></div>' +
@@ -130,7 +306,7 @@
                             '<div class="option cm">' +
                                 '<div class="icon"></div>' +
                                 '<label>' +
-                                    '<input type="radio" />' +
+                                    '<input type="radio" name="license-type" value="cm" />' +
                                     '商业许可协议' +
                                 '</label>' +
                                 '<div class="triangle"></div>' +
@@ -142,15 +318,15 @@
                             '<div class="description">2. 是否允许你的作品被改编:</div>' +
                             '<div class="question n3">' +
                                 '<label>' +
-                                    '<input type="radio" ng-model="license.cc.adaptation"/>' +
+                                    '<input type="radio" name="cc-adaptation" value="y"/>' +
                                     '是' +
                                 '</label>' +
                                 '<label>' +
-                                    '<input type="radio" ng-model="license.cc.adaptation"/>' +
+                                    '<input type="radio" name="cc-adaptation" value="n"/>' +
                                     '否' +
                                 '</label>' +
                                 '<label>' +
-                                    '<input type="radio" ng-model="license.cc.adaptation"/>' +
+                                    '<input type="radio" name="cc-adaptation" value="sa"/>' +
                                     '是，只要他人以相同方式共享' +
                                 '</label>' +
                             '</div>' +
@@ -159,11 +335,11 @@
                             '<div class="description">3. 是否允许商业使用:</div>' +
                             '<div class="question n2">' +
                                 '<label>' +
-                                    '<input type="radio" ng-model="license.cc.commercial"/>' +
+                                    '<input type="radio" name="cc-commercial" value="y"/>' +
                                     '是' +
                                 '</label>' +
                                 '<label>' +
-                                    '<input type="radio" ng-model="license.cc.commercial"/>' +
+                                    '<input type="radio" name="cc-commercial" value="n"/>' +
                                     '否' +
                                 '</label>' +
                             '</div>' +
@@ -172,11 +348,11 @@
                             '<div class="description">2. 是否允许你的作品被改编:</div>' +
                             '<div class="question n2">' +
                                 '<label>' +
-                                    '<input type="radio" />' +
+                                    '<input type="radio" name="cm-adaptation" value="y"/>' +
                                     '是' +
                                 '</label>' +
                                 '<label>' +
-                                    '<input type="radio" />' +
+                                    '<input type="radio" name="cm-adaptation" value="n"/>' +
                                     '否' +
                                 '</label>' +
                             '</div>' +
@@ -185,21 +361,66 @@
                             '<div class="description">3. 设置转载价格:</div>' +
                             '<div class="question">' +
                                 '<div class="price-tag-wrapper">' +
-                                    '<div class="price-tag" >10元</div>' +
-                                    '<div class="price-tag" >50元</div>' +
-                                    '<div class="price-tag" >100元</div>' +
-                                    '<div class="price-tag" >500元</div>' +
+                                    '<div class="price-tag t10" data-fee="10">10元</div>' +
+                                    '<div class="price-tag t50" data-fee="50">50元</div>' +
+                                    '<div class="price-tag t100" data-fee="100">100元</div>' +
+                                    '<div class="price-tag t500" data-fee="500">500元</div>' +
                                     '<div class="price-tag custom" >' +
-                                        '<input type="text" size="10" placeholder="自定义金额"/>' +
+                                        '<input type="text" placeholder="自定义金额"/>' +
                                         '<div class="text">元</div>' +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
                     '</div>' +
-                    '<div class="cc-license-preview">' +
-                        '<div class="name">您选择的转载许可协议：</div>' +
+                    '<div class="license-preview">' +
+                        '<div class="description">你选择的转载许可协议：</div>' +
+                        '<div class="license-preview-content">' +
+                            '<div class="yb-icons large">' +
+                                '<div class="yb-license cc">' +
+                                    '<a href="javascript:void(0)" title="知识共享（CC）4.0协议" class="yb-icon cc"></a>' +
+                                    '<a href="javascript:void(0)" title="必须按照许可人指定的方式对作品进行署名" class="yb-icon by"></a>' +
+                                    '<a href="javascript:void(0)" title="仅被授权出于非商业目的而复制、发行、展览和表演作品" class="yb-icon nc"></a>' +
+                                    '<a href="javascript:void(0)" title="不允许基于该作品创作演绎作品" class="yb-icon nd"></a>' +
+                                    '<a href="javascript:void(0)" title="您可以复制、发行、展览和表演作品，也必须允许他人基于该作品创作演绎作品" class="yb-icon sa"></a>' +
+                                '</div>' +
+                                '<div class="yb-license cm">' +
+                                    '<a href="javascript:void(0)" title="商业授权" class="yb-icon cm"></a>' +
+                                    '<span class="yb-price">授权费用&nbsp;￥<span class="yb-number"></span></span>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="license cc">' +
+                                '<div class="text">' +
+                                    '<span>本作品采用' +
+                                        '<a class="license-link nd nc" href="http://creativecommons.org/licenses/by-nc-nd/4.0" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>' +
+                                        '<a class="license-link ad nc" href="http://creativecommons.org/licenses/by-nc/4.0" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>' +
+                                        '<a class="license-link sa nc" href="http://creativecommons.org/licenses/by-nc-sa/4.0" target="_blank">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>' +
+                                        '<a class="license-link nd ac" href="http://creativecommons.org/licenses/by-nd/4.0" target="_blank">知识共享署名-禁止演绎 4.0 国际许可协议</a>' +
+                                        '<a class="license-link ad ac" href="https://creativecommons.org/licenses/by/4.0" target="_blank">知识共享署名4.0国际许可协议</a>' +
+                                        '<a class="license-link sa ac" href="http://creativecommons.org/licenses/by-sa/4.0" target="_blank">知识共享署名-相同方式共享 4.0 国际许可协议</a>' +
+                                    '进行许可</span>' +
+                                    '<ul class="details">' +
+                                        '<li class="cc">允许复制、发行、展览和表演作品，但必须按照指定的方式对作品进行署名</li>' +
+                                        '<li class="nc">允许出于非商业目的复制、发行、展览和表演作品</li>' +
+                                        '<li class="ac">允许复制、发行、展览和表演作品，包括出于商业目的进行上述活动</li>' +
+                                        '<li class="nd">允许复制、发行、展览和表演作品，但不允许基于该作品创作演绎作品</li>' +
+                                        '<li class="ad">允许复制、发行、展览和表演作品，也允许基于该作品创作演绎作品</li>' +
+                                        '<li class="sa">允许复制、发行演绎作品，但演绎作品必须采用与本协议相同或兼容的协议进行许可</li>' +
+                                    '</ul>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="license cm">' +
+                                '<div class="text">' +
+                                    '<span>本作品使用商业许可协议进行许可</span>' +
+                                    '<ul class="details">' +
+                                        '<li class="nd">不允许修改原作品，不允许再创作</li>' +
+                                        '<li class="ad">允许修改原作品和再创作</li>' +
+                                    '</ul>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
                     '</div>' +
+                    '<div class="submit-btn"><button type="button">保存</button></div>' +
                 '</div>' +
             '</div>' +
         '</div>';

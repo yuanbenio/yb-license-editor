@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>原本协议选择器</title>
+    <title>原本协议编辑器示例</title>
     <link rel="stylesheet" href="demo.css" />
     <link rel="stylesheet" href="../src/jquery.yb-license-editor.css" />
 </head>
 <body>
     <form>
-        <h1 class="page-name">原本协议选择器示例</h1>
+        <h1 class="page-name">原本协议编辑器示例</h1>
         <div class="title">
             <input type="text" placeholder="请输入文章标题" name="title" />
         </div>
@@ -16,11 +16,12 @@
             <textarea placeholder="请输入文章内容" name="content"></textarea>
         </div>
         <div class="submit">
-            <button type="button" class="btn-submit">提交文章</button>
+            <button type="button" class="btn-submit" id="article-submit">提交文章</button>
             <div class="license-editor">
                 <input type="text" id="license-editor" name="license" />
             </div>
         </div>
+        <div id="output"></div>
     </form>
     <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="../src/jquery.yb-license-editor.js"></script>
