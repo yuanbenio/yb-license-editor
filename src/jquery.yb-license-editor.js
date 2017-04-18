@@ -51,7 +51,7 @@
             $('body').append(this.$licensePicker);
 
             var self = this;
-            this.$licensePicker.on('click', '.close', function(){
+            this.$licensePicker.on('click', '.yb-close', function(){
                 self.hideLicensePicker();
             });
 
@@ -289,7 +289,7 @@
         '<div class="yb-license-picker">' +
             '<div class="yb-picker-modal">' +
                 '<div class="yb-title">' +
-                    '<div class="close">×</div>' +
+                    '<div class="yb-close">×</div>' +
                 '</div>' +
                 '<div class="yb-content">' +
                     '<div class="license-type">' +
@@ -301,7 +301,7 @@
                                     '<input type="radio" name="license-type" value="cc" />' +
                                     '知识共享许可协议' +
                                 '</label>' +
-                                '<div class="triangle"></div>' +
+                                '<div class="yb-triangle"></div>' +
                             '</div>' +
                             '<div class="option cm">' +
                                 '<div class="icon"></div>' +
@@ -309,7 +309,7 @@
                                     '<input type="radio" name="license-type" value="cm" />' +
                                     '商业许可协议' +
                                 '</label>' +
-                                '<div class="triangle"></div>' +
+                                '<div class="yb-triangle"></div>' +
                             '</div>' +
                         '</div>' +
                     '</div>' +
