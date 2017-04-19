@@ -2,8 +2,8 @@
   "name": "yb-license-editor",
   "description": "Yuanben license editor",
   "main": [
-    "dist/jquery.yb-license-editor.min.css",
-    "dist/jquery.yb-license-editor.min.js"
+    "src/jquery.yb-license-editor.css",
+    "src/jquery.yb-license-editor.js"
   ],
   "authors": [
     "Lency"
