@@ -1,0 +1,16 @@
+{
+  "name": "yb-license-editor",
+  "description": "Yuanben license editor",
+  "main": [
+    "dist/jquery.yb-license-editor.min.css",
+    "dist/jquery.yb-license-editor.min.js"
+  ],
+  "authors": [
+    "Lency"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/yuanbenio/yb-license-editor",
+  "dependencies": {
+    "jquery": "^3.2.1"
+  }
+}

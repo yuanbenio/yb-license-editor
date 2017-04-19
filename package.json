@@ -1,0 +1,31 @@
+{
+  "name": "yb-license-editor",
+  "version": "1.0.0",
+  "description": "Yuanben license editor",
+  "author": "Lency",
+  "license": "MIT",
+  "main": "src/jquery.yb-license-editor.js",
+  "dependencies": {
+    "jquery": "^3.2.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.0.4",
+    "gulp-flatten": "^0.3.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-template": "^3.1.0",
+    "gulp-uglify": "^2.1.2",
+    "gulp-util": "^3.0.7",
+    "node-sass": "^3.10.0",
+    "yargs": "^3.32.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yuanbenio/yb-license-editor"
+  }
+}
