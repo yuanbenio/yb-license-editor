@@ -76,7 +76,7 @@
 
                 if(!$(this).hasClass('custom'))
                 {
-                    self.licensePickerLicense.content.price = $(this).attr('data-fee');
+                    self.licensePickerLicense.content.price = parseInt($(this).attr('data-fee')) * 100;
                 }else{
 
                     if(!$(this).hasClass('active'))
@@ -94,7 +94,7 @@
 
                 if(price === '' || parseFloat(price) + '' === price)
                 {
-                    self.licensePickerLicense.content.price = price;
+                    self.licensePickerLicense.content.price = parseInt(price * 100);
                     self.updateLicensePicker();
                 }
             });
@@ -138,7 +138,7 @@
 
             }else{
                 $label.addClass('cm');
-                $label.find('.yb-price .yb-number').text(this.license.content.price);
+                $label.find('.yb-price .yb-number').text(this.license.content.price / 100);
             }
 
             this.$input.val(JSON.stringify(this.license));
@@ -216,7 +216,7 @@
                     $picker.addClass('nd');
                 }
 
-                var price = parseFloat(this.licensePickerLicense.content.price);
+                var price = parseFloat(this.licensePickerLicense.content.price) / 100;
 
                 if(price === 10 || price === 50 || price === 100 || price === 500)
                 {
@@ -231,7 +231,7 @@
                     }
                 }
 
-                $picker.find('.license-preview .yb-license.cm .yb-price .yb-number').text(this.licensePickerLicense.content.price);
+                $picker.find('.license-preview .yb-license.cm .yb-price .yb-number').text(this.licensePickerLicense.content.price / 100);
             }
         },
         changeLicenseType: function(type){
@@ -245,7 +245,7 @@
             }else{
                 this.licensePickerLicense.content = {
                     adaptation: 'y',
-                    price: 10
+                    price: 5000
                 };
             }
 
