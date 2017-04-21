@@ -63,13 +63,9 @@ gulp.task('build', ['clean'], () => {
         .pipe(gulp.dest(demoPath))
         .pipe(browserSync.stream());
 
-
-    let jqueryStream = gulp.src('node_modules/jquery/dist/jquery.js')
-        .pipe(gulp.dest(demoPath));
-
     gulp.src(srcPath + '/index.html')
-        .pipe(inject(series(jqueryStream, pluginJsStream, demoJsStream), {ignorePath: '/' + demoPath, addRootSlash: false}))
-        .pipe(inject(series(pluginCssStream, demoCssStream), {ignorePath: '/' + demoPath, addRootSlash: false}))
+        .pipe(inject(series(pluginJsStream, demoJsStream), {relative: true}))
+        .pipe(inject(series(pluginCssStream, demoCssStream), {relative: true}))
         .pipe(gulp.dest(demoPath));
 
 });
@@ -120,11 +116,8 @@ gulp.task('watch:image', () => {
 
 gulp.task('watch:html', ['watch:sass', 'watch:js', 'watch:image'], () => {
 
-    let jqueryStream = gulp.src('node_modules/jquery/dist/jquery.js')
-        .pipe(gulp.dest(servePath));
-
     gulp.src(srcPath + '/index.html')
-        .pipe(inject(series(jqueryStream, pluginJsStream, demoJsStream), {ignorePath: '/' + servePath, addRootSlash: false}))
+        .pipe(inject(series(pluginJsStream, demoJsStream), {ignorePath: '/' + servePath, addRootSlash: false}))
         .pipe(inject(series(pluginCssStream, demoCssStream), {ignorePath: '/' + servePath, addRootSlash: false}))
         .pipe(gulp.dest(servePath))
         .pipe(browserSync.stream());
