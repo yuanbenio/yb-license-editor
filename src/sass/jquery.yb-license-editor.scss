@@ -1,24 +1,53 @@
+@import '_colors';
+
 
 /* ============ License Label =========== */
 
 .yb-license-editor {
     font-family: 'PingFang SC', 'HanHei SC', 'Microsoft YaHei', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
-    font-size: 13px;
+    font-size: 14px;
+
+    .yb-license-enable {
+        color: #7b7b7b;
+        cursor: pointer;
+
+        a {
+            text-decoration: none;
+            color: $highlight-color;
+        }
+    }
+
+    .yb-license-introduction {
+
+        font-size: 13px;
+        margin-top: 6px;
+        margin-left: 3px;
+
+        a {
+            text-decoration: none;
+            color: #7b7b7b;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .yb-license-label {
+        margin-top: 6px;
+    }
+
+    &.enabled .yb-license-label,
+    &.disabled .yb-license-introduction {
+        display: block;
+    }
+
+    &.disabled .yb-license-label,
+    &.enabled .yb-license-introduction {
+        display: none;
+    }
 }
-.yb-license-introduction
-{
-    color: #9b9b9b;
-}
-.yb-license-introduction a {
-    text-decoration: none;
-    color: #9b9b9b;
-}
-.yb-license-introduction a:hover {
-    color: #1c8c79;
-}
-.yb-license-label {
-    margin-top: 6px;
-}
+
 .yb-label-name {
     display: inline-block;
     height: 30px;

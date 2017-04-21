@@ -26,7 +26,7 @@
     $.extend( YbLicenseEditor.prototype, {
         init: function() {
 
-            this.license = this.settings['defaultLicense'];
+            this.license = $.extend(true, {} ,this.settings['defaultLicense']);
 
             this.$input = $(this.element);
             this.$input.hide();
@@ -44,6 +44,24 @@
             var self = this;
             this.$licenseLabel.on('click', '.yb-edit-btn button', function(){
                 self.showLicensePicker();
+            });
+
+            this.$licenseLabel.on('click', '.yb-license-enable', function(){
+
+                var $input = $(this).find('input');
+
+                self.$licenseLabel.removeClass('enabled').removeClass('disabled');
+
+                if($input.prop('checked'))
+                {
+                    self.$licenseLabel.addClass('enabled');
+                    self.license = $.extend(true, {} ,self.settings['defaultLicense']);
+                    self.updateLicenseLabel();
+                }else{
+                    self.$licenseLabel.addClass('disabled');
+                    self.license = '';
+                    self.$input.val('');
+                }
             });
         },
         initLicensePicker: function() {
@@ -262,8 +280,14 @@
     };
 
     var licenseLabelTpl =
-        '<div class="yb-license-editor">' +
-            '<div class="yb-license-introduction">本文将使用<a href="https://yuanben.io" target="_blank">「原本」</a>进行版权保护和转载监控</div>' +
+        '<div class="yb-license-editor disabled">' +
+            '<label class="yb-license-enable">' +
+                '<input type="checkbox" />' +
+                '使用<a href="https://yuanben.io" target="_blank">「原本」</a>进行版权保护和转载监控' +
+            '</label>' +
+            '<div class="yb-license-introduction">' +
+                '<a href="https://yuanben.io/authors" target="_blank" >一键添加全网版权溯源、自助交易和侵权监控功能</a>' +
+            '</div>' +
             '<div class="yb-license-label">' +
                 '<div class="yb-label-name">授权许可协议：</div>' +
                 '<div class="yb-icons">' +
