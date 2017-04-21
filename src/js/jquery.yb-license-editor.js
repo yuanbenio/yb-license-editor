@@ -4,6 +4,7 @@
 
     var pluginName = "ybLicenseEditor",
         defaults = {
+			enabled: false,
             defaultLicense: {
                 type: 'cc',
                 content: {
@@ -26,8 +27,9 @@
     $.extend( YbLicenseEditor.prototype, {
         init: function() {
 
-            this.license = $.extend(true, {} ,this.settings['defaultLicense']);
-
+            this.license = $.extend(true, {}, this.settings.defaultLicense);
+			this.licenseEnabled = this.settings.enabled;
+			
             this.$input = $(this.element);
             this.$input.hide();
 
@@ -40,6 +42,7 @@
             this.$container = $(this.element.parentNode);
             this.$licenseLabel = $(licenseLabelTpl);
             this.$container.append(this.$licenseLabel);
+			this.$licenseEnableCheck = this.$licenseLabel.find('.yb-license-enable input');
 
             var self = this;
             this.$licenseLabel.on('click', '.yb-edit-btn button', function(){
@@ -54,14 +57,14 @@
 
                 if($input.prop('checked'))
                 {
-                    self.$licenseLabel.addClass('enabled');
-                    self.license = $.extend(true, {} ,self.settings['defaultLicense']);
-                    self.updateLicenseLabel();
+                    self.licenseEnabled = true;
+					self.license = $.extend(true, {} ,self.settings['defaultLicense']);
                 }else{
-                    self.$licenseLabel.addClass('disabled');
-                    self.license = '';
-                    self.$input.val('');
+                    self.licenseEnabled = false;
+					self.license = null;
                 }
+				
+				self.updateLicenseLabel();
             });
         },
         initLicensePicker: function() {
@@ -131,6 +134,20 @@
         },
         updateLicenseLabel: function() {
 
+			this.$licenseLabel.removeClass('enabled').removeClass('disabled');
+		
+			if(!this.licenseEnabled)
+			{
+				this.$licenseLabel.addClass('disabled');
+				this.$licenseEnableCheck.prop('checked', false);
+				this.$input.val('');
+				return;
+			}
+				
+			this.$licenseLabel.addClass('enabled');
+			this.$licenseEnableCheck.prop('checked', true);
+			
+		
             var $label = this.$licenseLabel.find('.yb-license-label');
 
             $label.removeClass('cm').removeClass('cc');
@@ -280,13 +297,13 @@
     };
 
     var licenseLabelTpl =
-        '<div class="yb-license-editor disabled">' +
+        '<div class="yb-license-editor">' +
             '<label class="yb-license-enable">' +
                 '<input type="checkbox" />' +
                 '使用<a href="https://yuanben.io" target="_blank">「原本」</a>进行版权保护和转载监控' +
             '</label>' +
             '<div class="yb-license-introduction">' +
-                '<a href="https://yuanben.io/authors" target="_blank" >全网版权溯源、侵权检测和版权自助交易功能</a>' +
+                '<a href="https://yuanben.io/authors" target="_blank" >立即开启全网版权溯源、侵权检测和版权自助交易功能</a>' +
             '</div>' +
             '<div class="yb-license-label">' +
                 '<div class="yb-label-name">转载许可协议：</div>' +

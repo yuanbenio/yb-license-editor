@@ -116,8 +116,11 @@ gulp.task('watch:image', () => {
 
 gulp.task('watch:html', ['watch:sass', 'watch:js', 'watch:image'], () => {
 
+	let jqueryStream = gulp.src('node_modules/jquery/dist/jquery.js')
+		.pipe(gulp.dest(servePath));
+
     gulp.src(srcPath + '/index.html')
-        .pipe(inject(series(pluginJsStream, demoJsStream), {ignorePath: '/' + servePath, addRootSlash: false}))
+        .pipe(inject(series(jqueryStream, pluginJsStream, demoJsStream), {ignorePath: '/' + servePath, addRootSlash: false}))
         .pipe(inject(series(pluginCssStream, demoCssStream), {ignorePath: '/' + servePath, addRootSlash: false}))
         .pipe(gulp.dest(servePath))
         .pipe(browserSync.stream());

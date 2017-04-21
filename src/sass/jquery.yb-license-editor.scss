@@ -11,6 +11,10 @@
         color: #7b7b7b;
         cursor: pointer;
 
+		input {
+			margin-right: 6px;
+		}
+		
         a {
             text-decoration: none;
             color: $highlight-color;
