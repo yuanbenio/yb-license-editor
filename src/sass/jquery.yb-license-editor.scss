@@ -14,7 +14,7 @@
 		input {
 			margin-right: 6px;
 		}
-		
+
         a {
             text-decoration: none;
             color: $highlight-color;
@@ -115,6 +115,11 @@
 }
 .yb-edit-btn button:active {
     background-color: #e0e0e0;
+}
+
+.yb-license-label.cc .yb-label-name .cm,
+.yb-license-label.cm .yb-label-name .cc {
+        display: none;
 }
 
 /* ============ License Picker =========== */

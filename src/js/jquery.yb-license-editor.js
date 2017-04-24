@@ -29,7 +29,7 @@
 
             this.license = $.extend(true, {}, this.settings.defaultLicense);
 			this.licenseEnabled = this.settings.enabled;
-			
+
             this.$input = $(this.element);
             this.$input.hide();
 
@@ -63,7 +63,7 @@
                     self.licenseEnabled = false;
 					self.license = null;
                 }
-				
+
 				self.updateLicenseLabel();
             });
         },
@@ -135,7 +135,7 @@
         updateLicenseLabel: function() {
 
 			this.$licenseLabel.removeClass('enabled').removeClass('disabled');
-		
+
 			if(!this.licenseEnabled)
 			{
 				this.$licenseLabel.addClass('disabled');
@@ -143,11 +143,11 @@
 				this.$input.val('');
 				return;
 			}
-				
+
 			this.$licenseLabel.addClass('enabled');
 			this.$licenseEnableCheck.prop('checked', true);
-			
-		
+
+
             var $label = this.$licenseLabel.find('.yb-license-label');
 
             $label.removeClass('cm').removeClass('cc');
@@ -306,7 +306,10 @@
                 '<a href="https://yuanben.io/authors" target="_blank" >立即开启全网版权溯源、侵权检测和版权自助交易功能</a>' +
             '</div>' +
             '<div class="yb-license-label">' +
-                '<div class="yb-label-name">转载许可协议：</div>' +
+                '<div class="yb-label-name">' +
+                    '<span class="cc">知识共享协议：</span>' +
+                    '<span class="cm">付费转载协议：</span>' +
+                '</div>' +
                 '<div class="yb-icons">' +
                     '<div class="yb-license cc">' +
                         '<a href="javascript:void(0)" title="知识共享（CC）4.0协议" class="yb-icon cc"></a>' +
