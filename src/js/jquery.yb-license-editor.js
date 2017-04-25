@@ -11,6 +11,9 @@
                     adaptation: 'sa',
                     commercial: 'n'
                 }
+            },
+            onEnableLicense: function() {
+			    return true;
             }
         };
 
@@ -52,6 +55,15 @@
             this.$licenseLabel.on('click', '.yb-license-enable', function(){
 
                 var $input = $(this).find('input');
+
+                if(typeof(self.settings.onEnableLicense) === 'function')
+                {
+                    if(!self.settings.onEnableLicense())
+                    {
+                        $input.prop('checked', false);
+                        return;
+                    }
+                }
 
                 self.$licenseLabel.removeClass('enabled').removeClass('disabled');
 
