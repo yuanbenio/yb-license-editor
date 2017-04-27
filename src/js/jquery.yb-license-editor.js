@@ -12,34 +12,57 @@
                     commercial: 'n'
                 }
             },
-            onEnableLicense: function() {
-			    return true;
-            }
+            onEnableLicense: function() {}
         };
 
     function YbLicenseEditor ( element, options ) {
         this.element = element;
-
         this.settings = $.extend( {}, defaults, options );
-        this._defaults = defaults;
-        this._name = pluginName;
-
         this.init();
     }
 
     $.extend( YbLicenseEditor.prototype, {
         init: function() {
 
-            this.license = $.extend(true, {}, this.settings.defaultLicense);
-			this.licenseEnabled = this.settings.enabled;
-
             this.$input = $(this.element);
             this.$input.hide();
+
+            this.initLicense();
 
             this.initLicenseLabel();
             this.initLicensePicker();
 
             this.updateLicenseLabel();
+        },
+        initLicense: function() {
+
+            var filledLicense = this.$input.val();
+
+            if(filledLicense)
+            {
+                // License in the input element takes the first priority
+                this.licenseEnabled = true;
+                this.updateLicense(JSON.parse(filledLicense));
+            }else{
+                // Then check for the license in the local storage
+                // which is the license user chose last time
+
+                var storedLicense = this.getLicenseFromLocalStorage();
+                if(storedLicense)
+                {
+                    this.licenseEnabled = true;
+                    this.updateLicense(storedLicense);
+                }else{
+                    // Finally load the default license
+                    this.licenseEnabled = this.settings.enabled;
+                    if(this.licenseEnabled)
+                    {
+                        this.updateLicense($.extend(true, {}, this.settings.defaultLicense));
+                    }else{
+                        this.updateLicense(null);
+                    }
+                }
+            }
         },
         initLicenseLabel: function() {
             this.$container = $(this.element.parentNode);
@@ -58,7 +81,7 @@
 
                 if(typeof(self.settings.onEnableLicense) === 'function')
                 {
-                    if(!self.settings.onEnableLicense())
+                    if(self.settings.onEnableLicense() === false)
                     {
                         $input.prop('checked', false);
                         return;
@@ -70,10 +93,10 @@
                 if($input.prop('checked'))
                 {
                     self.licenseEnabled = true;
-					self.license = $.extend(true, {} ,self.settings['defaultLicense']);
+                    self.updateLicense($.extend(true, {} ,self.settings.defaultLicense));
                 }else{
                     self.licenseEnabled = false;
-					self.license = null;
+                    self.updateLicense(null);
                 }
 
 				self.updateLicenseLabel();
@@ -139,7 +162,7 @@
                     return;
                 }
 
-                self.license = self.licensePickerLicense;
+                self.updateLicense(self.licensePickerLicense);
                 self.updateLicenseLabel();
                 self.hideLicensePicker();
             });
@@ -187,8 +210,6 @@
                 $label.addClass('cm');
                 $label.find('.yb-price .yb-number').text(this.license.content.price / 100);
             }
-
-            this.$input.val(JSON.stringify(this.license));
         },
         showLicensePicker: function() {
 
@@ -297,6 +318,42 @@
             }
 
             this.updateLicensePicker();
+        },
+        updateLicense: function(license) {
+            this.license = license;
+
+            if(license !== null)
+            {
+                this.$input.val(JSON.stringify(this.license));
+                this.storeLicenseInLocalStorage();
+            }else{
+                this.$input.val('');
+                this.clearLicenseInLocalStorage();
+            }
+        },
+        storeLicenseInLocalStorage: function() {
+            if(localStorage)
+            {
+                localStorage.setItem('yb-license-editor-license', JSON.stringify(this.license));
+            }
+        },
+        getLicenseFromLocalStorage: function() {
+            if(!localStorage)
+                return null;
+
+            var str = localStorage.getItem('yb-license-editor-license');
+            if(str)
+            {
+                return JSON.parse(str);
+            }
+
+            return null;
+        },
+        clearLicenseInLocalStorage: function() {
+            if(localStorage)
+            {
+                localStorage.removeItem('yb-license-editor-license');
+            }
         }
     });
 
