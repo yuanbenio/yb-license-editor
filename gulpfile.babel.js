@@ -23,9 +23,12 @@ let demoJsStream = null;
 let demoCssStream = null;
 
 
-gulp.task('clean', () => {
-    del(servePath);
-    del(distPath);
+gulp.task('clean', (cb) => {
+    del(servePath).then(() => {
+        del(distPath).then(() => {
+            cb();
+        });
+    });
 });
 
 gulp.task('build', ['clean'], () => {

@@ -12,7 +12,9 @@
                     commercial: 'n'
                 }
             },
-            onEnableLicense: function() {}
+            licensePickerSubmitButtonText: null,
+            onEnableLicense: function() {},
+            onLicenseSelected: function() {}
         };
 
     function YbLicenseEditor ( element, options ) {
@@ -24,8 +26,22 @@
     $.extend( YbLicenseEditor.prototype, {
         init: function() {
 
-            this.$input = $(this.element);
-            this.$input.hide();
+            var self = this;
+
+            var $initElement = $(this.element);
+
+            if($initElement.attr('type') === 'text' || $initElement.attr('type') === 'hidden')
+            {
+                // Init from an input element
+                this.$input = $initElement;
+                this.$input.hide();
+            }else{
+                // Init from a button
+                this.$button = $initElement;
+                this.$button.on('click', function(){
+                    self.showLicensePicker();
+                });
+            }
 
             this.initLicense();
 
@@ -36,7 +52,7 @@
         },
         initLicense: function() {
 
-            var filledLicense = this.$input.val();
+            var filledLicense = this.$input ? this.$input.val() : null;
 
             if(filledLicense)
             {
@@ -65,6 +81,10 @@
             }
         },
         initLicenseLabel: function() {
+
+            if(!this.$input)
+                return;
+
             this.$container = $(this.element.parentNode);
             this.$licenseLabel = $(licenseLabelTpl);
             this.$container.append(this.$licenseLabel);
@@ -105,6 +125,11 @@
         initLicensePicker: function() {
             this.$licensePicker = $(licensePickerTpl);
             $('body').append(this.$licensePicker);
+
+            if(this.settings.licensePickerSubmitButtonText)
+            {
+                this.$licensePicker.find('.submit-btn button').text(this.settings.licensePickerSubmitButtonText);
+            }
 
             var self = this;
             this.$licensePicker.on('click', '.yb-close', function(){
@@ -165,9 +190,17 @@
                 self.updateLicense(self.licensePickerLicense);
                 self.updateLicenseLabel();
                 self.hideLicensePicker();
+
+                if(typeof(self.settings.onLicenseSelected) === 'function')
+                {
+                    self.settings.onLicenseSelected(self.licensePickerLicense);
+                }
             });
         },
         updateLicenseLabel: function() {
+
+            if(!this.$input)
+                return;
 
 			this.$licenseLabel.removeClass('enabled').removeClass('disabled');
 
@@ -324,10 +357,19 @@
 
             if(license !== null)
             {
-                this.$input.val(JSON.stringify(this.license));
+                if(this.$input)
+                {
+                    this.$input.val(JSON.stringify(this.license));
+                }
+
                 this.storeLicenseInLocalStorage();
             }else{
-                this.$input.val('');
+
+                if(this.$input)
+                {
+                    this.$input.val('');
+                }
+
                 this.clearLicenseInLocalStorage();
             }
         },
