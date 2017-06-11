@@ -70,12 +70,18 @@
                     this.updateLicense(storedLicense);
                 }else{
                     // Finally load the default license
-                    this.licenseEnabled = this.settings.enabled;
-                    if(this.licenseEnabled)
+
+                    if(this.$input)
                     {
-                        this.updateLicense($.extend(true, {}, this.settings.defaultLicense));
+                        this.licenseEnabled = this.settings.enabled;
+                        if(this.licenseEnabled)
+                        {
+                            this.updateLicense($.extend(true, {}, this.settings.defaultLicense));
+                        }else{
+                            this.updateLicense(null);
+                        }
                     }else{
-                        this.updateLicense(null);
+                        this.updateLicense($.extend(true, {}, this.settings.defaultLicense));
                     }
                 }
             }
