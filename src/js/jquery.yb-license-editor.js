@@ -14,7 +14,8 @@
             },
             licensePickerSubmitButtonText: null,
             onEnableLicense: function() {},
-            onLicenseSelected: function() {}
+            onLicenseSelected: function() {},
+            onShowLicensePicker: function() {}
         };
 
     function YbLicenseEditor ( element, options ) {
@@ -251,6 +252,12 @@
             }
         },
         showLicensePicker: function() {
+
+            if(typeof(this.settings.onShowLicensePicker) === 'function')
+            {
+                if(this.settings.onShowLicensePicker() === false)
+                    return;
+            }
 
             this.licensePickerLicense = $.extend(true, {}, this.license);
             this.updateLicensePicker();
